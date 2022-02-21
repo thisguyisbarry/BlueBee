@@ -1,15 +1,11 @@
-import React from 'react';
-import './App.css';
-import './CreateEvent'
-import CreateEvent from './CreateEvent';
-
+import React from "react";
+import "./App.css";
+import Routes from "../Routes";
 
 function App() {
   return (
-    <div className="App">
-      
-      <CreateEvent />
-    
+    <div className="App container py-3">
+      <Routes />
     </div>
   );
 }

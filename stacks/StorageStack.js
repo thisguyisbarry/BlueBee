@@ -9,10 +9,9 @@ export default class StorageStack extends sst.Stack {
     // Create the DynamoDB table
     this.table = new sst.Table(this, "EventsDev", {
       fields: {
-        testId: sst.TableFieldType.STRING,
         eventId: sst.TableFieldType.STRING,
       },
-      primaryIndex: { partitionKey: "testId", sortKey: "eventId" },
+      primaryIndex: { partitionKey: "eventId" },
     });
   }
 }

@@ -9,13 +9,13 @@ export const main = handler(async (event) => {
   const params = {
     TableName: process.env.TABLE_NAME,
     Item: {
-      testId: "123",
       eventId: uuid.v1(), 
       eventName: data.eventName,
-    //   eventStartTime: data.eventStartTime,
-    //   eventEndTime: data.eventEndTime,
-    //   eventStartDate: data.eventStartDate,
-    //   eventEndDate: data.eventEndDate,
+      eventStartTime: data.eventStartTime,
+      eventEndTime: data.eventEndTime,
+      eventStartDate: data.eventStartDate,
+      eventEndDate: data.eventEndDate,
+      eventParticipants: data.eventParticipants,
       createdAt: Date.now(), // Current Unix timestamp
     },
   };

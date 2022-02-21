@@ -6,7 +6,6 @@ export const main = handler(async (event) => {
     TableName: process.env.TABLE_NAME,
     
     Key: {
-      testId: "123",
       eventId: event.pathParameters.id,
     },
   };
