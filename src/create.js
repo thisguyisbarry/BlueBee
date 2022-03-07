@@ -11,11 +11,11 @@ export const main = handler(async (event) => {
     Item: {
       eventId: uuid.v1(), 
       eventName: data.eventName,
-      eventStartTime: data.eventStartTime,
-      eventEndTime: data.eventEndTime,
-      eventStartDate: data.eventStartDate,
-      eventEndDate: data.eventEndDate,
-      eventParticipants: data.eventParticipants,
+      startTime: data.startTime,
+      endTime: data.endTime,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      eventParticipants: data.Participants,
       createdAt: Date.now(), // Current Unix timestamp
     },
   };

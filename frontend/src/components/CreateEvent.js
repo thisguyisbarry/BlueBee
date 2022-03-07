@@ -6,9 +6,12 @@ import Col from 'react-bootstrap/Col';
 import { API } from 'aws-amplify';
 import { onError } from "../lib/errorLib";
 import config from "../config";
+import { withRouter } from "react-router-dom";
 
 class CreateEvent extends React.Component {
-    state = { eventName: '', 
+    state = { 
+              eventID: '',
+              eventName: '', 
               startDate: '',
               endDate:   '',
               startTime: '00:00',
@@ -19,16 +22,23 @@ class CreateEvent extends React.Component {
         event.preventDefault();
 
         console.log(this.state);
-        // try {
-        //     await this.createEvent(this.state);
-        // } catch (e) {
-        //     onError(e);
-        // }
+        try {
+            await this.createEvent(this.state);
+            this.props.history.push(`/event/${this.state.eventID}`); 
+            console.log(this.state.eventID);
+        } catch (e) {
+            onError(e);
+        }
     }
 
     createEvent(event) {
         return API.post("events", "/events", {
           body: event
+        }).then(res =>{
+            console.log(res);
+            this.setState({
+              eventID: res.eventId
+            })
         });
     }
       
@@ -138,4 +148,4 @@ class CreateEvent extends React.Component {
     }
 }
 
-export default CreateEvent;
+export default withRouter(CreateEvent);
