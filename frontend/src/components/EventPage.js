@@ -1,5 +1,10 @@
 import { API } from "aws-amplify";
 import React from "react";
+import FullCalendar, { getDayClassNames } from '@fullcalendar/react'
+import { Calendar } from '@fullcalendar/core';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from "@fullcalendar/interaction"
+import ClipboardCopy from './ClipboardCopy';
 
 class EventPage extends React.Component{
 
@@ -8,8 +13,8 @@ class EventPage extends React.Component{
               eventName: '', 
               startDate: '',
               endDate:   '',
-              startTime: '',
-              endTime:   '',
+              startTime: '00:00:00',
+              endTime:   '00:00:00',
             }
 
     async componentDidMount(){
@@ -35,20 +40,42 @@ class EventPage extends React.Component{
               startTime: res.startTime,
               endTime:   res.endTime,
             })
+
+
         });
+    }
+
+    // Returns a number (0-6 for the days of the week) so we can set
+    // appropriate first day in calendar view
+    dateToDay(d){
+        let date = new Date(d);
+        return date.getDay();
     }
 
 
     render() {
         return(
         <div className="EventPage">
-            <h1>Hello!</h1>
-            <h2>ID: {this.state.eventID}</h2>
-            <h2>Name: {this.state.eventName}</h2>
-            <h2>Start Time: {this.state.startTime}</h2>
-            <h2>End Time: {this.state.endTime}</h2>
-            <h2>Start Date: {this.state.startDate}</h2>
-            <h2>End Time: {this.state.endDate}</h2>
+            
+            <h2>Event Name: {this.state.eventName}</h2>
+            
+
+            <FullCalendar
+                plugins={[ timeGridPlugin, interactionPlugin ]}
+                initialView="timeGridWeek"
+                slotMinTime={this.state.startTime}
+                slotMaxTime={this.state.endTime}
+                editable={true}
+                selectable={true}
+                selectMirror={true}
+                validRange={{
+                    start:  this.state.startDate,
+                    end:    this.state.endDate
+                }}
+                firstDay={this.dateToDay(this.state.startDate) || 0}  // OR 0 to fix initial loading issues before data is ready
+            />
+        
+                <ClipboardCopy copyText={'localhost:3000/event/' + this.state.eventID} />
         </div>
         )
     }
