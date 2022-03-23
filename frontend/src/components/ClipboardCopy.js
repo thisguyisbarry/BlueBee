@@ -32,7 +32,7 @@ function ClipboardCopy({ copyText }) {
         <input type="text" value={copyText} readOnly />
         {/* Bind our handler function to the onClick button property */}
         <button onClick={handleCopyClick}>
-          <span>{isCopied ? 'Copied!' : 'Copy'}</span>
+          <span>{isCopied ? 'Copied!' : 'Copy Link'}</span>
         </button>
       </div>
     );

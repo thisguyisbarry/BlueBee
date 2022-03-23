@@ -5,6 +5,8 @@ import { Calendar } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction"
 import ClipboardCopy from './ClipboardCopy';
+import { createEventId } from './event-utils'
+
 
 class EventPage extends React.Component{
 
@@ -15,6 +17,13 @@ class EventPage extends React.Component{
               endDate:   '',
               startTime: '00:00:00',
               endTime:   '00:00:00',
+              initialEvents: [{
+                  start: '2022-03-15T05:00:00',
+                  end: '2022-03-15T06:0:00'
+              }],
+              userName: '',
+              events: [],
+              participants: []
             }
 
     async componentDidMount(){
@@ -26,12 +35,14 @@ class EventPage extends React.Component{
             console.log(error);
         }
 
+
     }
     
     getEvent(eventID){
         return API.get("events", `/events/${eventID}`)
         .then(res =>{
             console.log(res);
+            let name = ''
 
             this.setState({
               eventName: res.eventName, 
@@ -40,6 +51,20 @@ class EventPage extends React.Component{
               startTime: res.startTime,
               endTime:   res.endTime,
             })
+
+            while(name===''){
+                name = prompt("Please enter your name")
+            }
+    
+            this.setState({
+                userName: name,
+            })
+            console.log(this.state.userName)
+            if(this.state.participants.includes(this.state.userName)){
+    
+            } else{
+                this.state.participants.push(this.state.userName)
+            }
 
 
         });
@@ -52,30 +77,70 @@ class EventPage extends React.Component{
         return date.getDay();
     }
 
+    // Only allows selections of 1 hour in length (3600000 ms) and name is selected
+    limitSelect = (selectInfo) => {
+        let hour = 3600000
+
+        if(selectInfo.start.valueOf() + hour === selectInfo.end.valueOf() && !(this.state.userName==='')){
+            return true
+        }
+
+        return false
+    }
+
+    handleTimeSelect = (selectInfo) => {
+        let calendarApi = selectInfo.view.calendar
+
+        calendarApi.unselect()
+
+        calendarApi.addEvent({
+            id: createEventId(),
+            start: selectInfo.startStr,
+            end: selectInfo.endStr
+        })
+    }
+
+    handleEvents = (events) => {
+        this.setState({
+          currentEvents: events
+        })
+      }
+
 
     render() {
         return(
         <div className="EventPage">
             
-            <h2>Event Name: {this.state.eventName}</h2>
+            <h2>Event Name: {this.state.eventName || 'Event Not Found'}</h2>
             
+            <ClipboardCopy copyText={window.location.href} />
 
             <FullCalendar
                 plugins={[ timeGridPlugin, interactionPlugin ]}
                 initialView="timeGridWeek"
+                allDaySlot={false}
+                selectOverlap={false}
+                expandRows={true}
+                headerToolbar={{
+                    end: 'prev,next'
+                }}
                 slotMinTime={this.state.startTime}
                 slotMaxTime={this.state.endTime}
-                editable={true}
+                slotDuration={'01:00:00'}
+                editable={false}
                 selectable={true}
-                selectMirror={true}
+                selectAllow={this.limitSelect}
                 validRange={{
                     start:  this.state.startDate,
                     end:    this.state.endDate
                 }}
                 firstDay={this.dateToDay(this.state.startDate) || 0}  // OR 0 to fix initial loading issues before data is ready
+                initialEvents={this.state.initialEvents}
+                select={this.handleTimeSelect}
+                eventsSet={this.handleEvents}
             />
         
-                <ClipboardCopy copyText={'localhost:3000/event/' + this.state.eventID} />
+                
         </div>
         )
     }
