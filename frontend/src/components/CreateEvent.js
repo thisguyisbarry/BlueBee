@@ -31,7 +31,7 @@ class CreateEvent extends React.Component {
         }
     }
 
-    createEvent(event) {
+    createEvent = async (event) => {
         return API.post("events", "/events", {
           body: event
         }).then(res =>{

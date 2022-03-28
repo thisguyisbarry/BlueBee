@@ -15,7 +15,8 @@ export const main = handler(async (event) => {
       endTime: data.endTime,
       startDate: data.startDate,
       endDate: data.endDate,
-      eventParticipants: data.Participants,
+      participants: [],
+      events: [],
       createdAt: Date.now(), // Current Unix timestamp
     },
   };
